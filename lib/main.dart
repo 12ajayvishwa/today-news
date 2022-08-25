@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'screens/signin_page.dart';
-import 'screens/signup_page.dart';
+import 'package:todaynews/screens/signup_page.dart';
+import 'screens/phone_verification_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home:const SignInPage()
+      home: PhoneVerificationPage()
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-InputDecoration inputDecoration(String hintText,){
+InputDecoration inputDecoration(String hintText,{IconButton? iconButton}){
   return InputDecoration(
       contentPadding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 12.0),
       hintText: hintText,
@@ -9,6 +9,7 @@ InputDecoration inputDecoration(String hintText,){
           fontSize: 16,
           fontWeight: FontWeight.normal,
           color: Color(0xFFA8A7A7)),
+          suffixIcon: iconButton,
       filled: true,
       fillColor: const Color(0xFFF5F7FB),
       focusedBorder: OutlineInputBorder(

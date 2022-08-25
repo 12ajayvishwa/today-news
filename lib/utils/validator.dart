@@ -39,3 +39,11 @@ String? phoneNumberValidator(value) {
   }
   return null;
 }
+
+String? addressValidator(value) {
+  if(value!.length == 0){
+    return 'Please enter address';
+  }else{
+    return  null;
+  }
+}
