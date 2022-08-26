@@ -4,6 +4,7 @@ class LogoText extends StatelessWidget {
   final String firstText;
   final String secondText;
 
+  // ignore: prefer_const_constructors_in_immutables
   LogoText({Key? key, required this.firstText, required this.secondText}) : super(key: key);
 
   @override

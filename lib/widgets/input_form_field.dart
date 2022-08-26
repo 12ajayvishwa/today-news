@@ -11,6 +11,7 @@ class TextFormFields extends StatelessWidget {
   final IconButton? iconButton;
   final bool? obsecureText;
   final TextInputAction? textInputAction;
+  final Widget? prefixIcon;
   const TextFormFields(
       {Key? key,
       required this.size,
@@ -18,6 +19,7 @@ class TextFormFields extends StatelessWidget {
       required this.validator,
       required this.hintText,
       required this.textInputType,
+      this.prefixIcon,
       this.iconButton,
       this.obsecureText,
       this.textInputAction})
@@ -46,6 +48,7 @@ class TextFormFields extends StatelessWidget {
           decoration: inputDecoration(
             hintText,
             iconButton: iconButton,
+            prefixIcon: prefixIcon
           ),
           obscureText: obsecureText ?? false,
         ),
@@ -93,10 +96,12 @@ class PhoneNumberInputField extends StatelessWidget {
             ),
             initialCountryCode: "IN",
             onChanged: (phone) {
+              // ignore: avoid_print
               print(phone.completeNumber);
             },
             onCountryChanged: (country){
-              print('Country changed to: ' + country.name);
+              // ignore: avoid_print
+              print('Country changed to: ${country.name}');
             },
           ),
         ),

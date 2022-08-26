@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:todaynews/screens/forget_password_page.dart';
+import 'package:todaynews/screens/signup_page.dart';
+import 'package:todaynews/services/auth_services.dart';
 import 'package:todaynews/utils/validator.dart';
 import 'package:todaynews/widgets/custom_text_button.dart';
 
@@ -15,11 +18,13 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
-
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   bool isVisible = true;
+  bool showLoading = false;
+
+  final AuthClass _authClass = AuthClass();
 
   @override
   Widget build(BuildContext context) {
@@ -28,24 +33,40 @@ class _SignInPageState extends State<SignInPage> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.only(
-              top: size.height * 0.2,
+              top: size.height * 0.1,
               left: size.width * 0.04,
               right: size.width * 0.04),
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                LogoText(
-                  firstText: "Today",
-                  secondText: "News",
+          child: showLoading
+              ? Center(
+                  child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    CircularProgressIndicator(),
+                    Text(
+                      "Data in progress....",
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontFamily: "oswald",
+                      ),
+                    )
+                  ],
+                ))
+              : Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      LogoText(
+                        firstText: "Today",
+                        secondText: "News",
+                      ),
+                      const SizedBox(
+                        height: 55,
+                      ),
+                      _loginFormWidget(size, context)
+                    ],
+                  ),
                 ),
-                const SizedBox(
-                  height:  15,
-                ),
-                _loginFormWidget(size, context)
-              ],
-            ),
-          ),
         ),
       ),
     );
@@ -55,20 +76,17 @@ class _SignInPageState extends State<SignInPage> {
     return Form(
         key: _formKey,
         child: SizedBox(
-          height: size.height/2.6,
+          height: size.height / 2.6,
           width: size.width * 0.9,
           child: Card(
-            elevation: 10,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10,right: 10),
-              child:_loginFieldsWidget(size),
-              )
-            
-            
-          ),
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: _loginFieldsWidget(size),
+              )),
         ));
   }
 
@@ -79,8 +97,8 @@ class _SignInPageState extends State<SignInPage> {
         scrollDirection: Axis.vertical,
         children: [
           TextFormFields(
-            hintText: "Enter Username",
-            controller: usernameController,
+            hintText: "Enter username/email",
+            controller: emailController,
             size: size,
             validator: emailValidator,
             textInputType: TextInputType.emailAddress,
@@ -112,11 +130,14 @@ class _SignInPageState extends State<SignInPage> {
           CustomButton(
             size: size,
             text: 'Login',
-            radius: BorderRadius.circular(18),
-            onPressed: () {
+            radius: BorderRadius.circular(15),
+            onPressed: () async {
               if (_formKey.currentState!.validate()) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Proccessing Data")));
+                await _authClass.signIn(
+                    emailController.text, passwordController.text, context);
+                setState(() {
+                  showLoading = true;
+                });
               }
             },
           ),
@@ -125,12 +146,20 @@ class _SignInPageState extends State<SignInPage> {
             children: [
               CustomTextButton(
                 text: "Register",
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const SignUpPage()));
+                },
                 color: Colors.black,
               ),
               CustomTextButton(
                 text: "Forgot password?",
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const ForgetPasswordPage()));
+                },
                 color: Colors.black,
               )
             ],

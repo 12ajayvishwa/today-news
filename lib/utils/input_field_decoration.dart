@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-InputDecoration inputDecoration(String hintText,{IconButton? iconButton}){
+InputDecoration inputDecoration(String hintText,{IconButton? iconButton, Widget? prefixIcon}){
   return InputDecoration(
-      contentPadding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 12.0),
+      contentPadding: const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 12.0),
       hintText: hintText,
       hintStyle: const TextStyle(
           fontFamily: "oswald",
           fontSize: 16,
           fontWeight: FontWeight.normal,
           color: Color(0xFFA8A7A7)),
+          prefixIcon: prefixIcon,
           suffixIcon: iconButton,
       filled: true,
       fillColor: const Color(0xFFF5F7FB),

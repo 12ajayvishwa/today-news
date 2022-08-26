@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:todaynews/screens/signin_page.dart';
+import 'package:todaynews/services/auth_services.dart';
 import 'package:todaynews/utils/validator.dart';
 import 'package:todaynews/widgets/input_form_field.dart';
 
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_button.dart';
 import '../widgets/logo_text.dart';
-import 'phone_verification_page.dart';
 
 class SignUpPage extends StatefulWidget {
   final String? phoneNumber;
@@ -30,6 +31,8 @@ class _SignUpPageState extends State<SignUpPage> {
   //   String phoneNumber = phoneNumberController.text;
   //   Navigator.push(context, MaterialPageRoute(builder: (context) => PhoneVerificationPage(phoneNumber: phoneNumber,)));
   // }
+
+  final AuthClass _authClass = AuthClass();
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +115,7 @@ class _SignUpPageState extends State<SignUpPage> {
               hintText: "Enter your address",
               textInputAction: TextInputAction.next,
               textInputType: TextInputType.streetAddress),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           PhoneNumberInputField(
@@ -122,7 +125,7 @@ class _SignUpPageState extends State<SignUpPage> {
             textInputType: TextInputType.phone,
             textInputAction: TextInputAction.next,
           ),
-          SizedBox(height: 10,),
+          const SizedBox(height: 10,),
           TextFormFields(
               size: size,
               controller: passwordController,
@@ -137,28 +140,29 @@ class _SignUpPageState extends State<SignUpPage> {
                     isVisible = !isVisible;
                   });
                 },)),
-                SizedBox(height: 15,),
+                const SizedBox(height: 15,),
                 CustomButton(
             size: size,
-            text: 'SignUp',
-            radius: BorderRadius.circular(18),
+            text: 'Submit',
+            radius: BorderRadius.circular(15),
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                print(nameController.text);
-                print(emailController.text);
-                print(addressController.text);
-                print(phoneNumberController.text);
-                print(passwordController.text);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => PhoneVerificationPage()));
-                ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Proccessing Data")));
+                _authClass.signUp(
+                  emailController.text, 
+                  passwordController.text, 
+                  nameController.text, 
+                  addressController.text, 
+                  "+91${phoneNumberController.text}", context);
+               const Center(child: CircularProgressIndicator(),);
+                
+                
               }
             },
           ),
           CustomTextButton(
                 text: "Already have an account? Login",
                 onPressed: () {
-                  print("nope");
+                 Navigator.push(context, MaterialPageRoute(builder: (_) => const SignInPage()));
                 },
                 color: Colors.black,
               ),

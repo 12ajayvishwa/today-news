@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:todaynews/widgets/custom_button.dart';
+import 'package:todaynews/widgets/logo_text.dart';
 import '../widgets/input_form_field.dart';
 import 'home.dart';
 
-enum MobileVerificationState{
+enum MobileVerificationState {
   // ignore: constant_identifier_names
   SHOW_MOBILE_FORM_STATE,
   // ignore: constant_identifier_names
@@ -11,16 +14,16 @@ enum MobileVerificationState{
 }
 
 class PhoneVerificationPage extends StatefulWidget {
-  
-  PhoneVerificationPage({Key? key}) : super(key: key);
+  const PhoneVerificationPage({Key? key}) : super(key: key);
 
   @override
   State<PhoneVerificationPage> createState() => _PhoneVerificationPageState();
 }
 
 class _PhoneVerificationPageState extends State<PhoneVerificationPage> {
-  MobileVerificationState currentState = MobileVerificationState.SHOW_MOBILE_FORM_STATE;
-  final otpController = TextEditingController(); 
+  MobileVerificationState currentState =
+      MobileVerificationState.SHOW_MOBILE_FORM_STATE;
+  final otpController = TextEditingController();
   final phoneNumberController = TextEditingController();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -28,106 +31,140 @@ class _PhoneVerificationPageState extends State<PhoneVerificationPage> {
   late String verificationId;
 
   bool showLoading = false;
+  String smsCode = "";
 
-  void signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) async {
+  void signInWithPhoneAuthCredential(
+      PhoneAuthCredential phoneAuthCredential) async {
     setState(() {
       showLoading = true;
     });
 
-    try{
-      final authCredential = 
-            await _auth.signInWithCredential(phoneAuthCredential);
+    try {
+      final authCredential =
+          await _auth.signInWithCredential(phoneAuthCredential);
       setState(() {
         showLoading = false;
       });
 
-      if(authCredential?.user != null){
+      if (authCredential.user != null) {
         // ignore: use_build_context_synchronously
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const Home()));
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
         showLoading = false;
       });
 
-      _scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text(e.message as String)));
+      Fluttertoast.showToast(msg: e.message as String);
     }
   }
-  
 
-  getMobileFormWidget(context){
+  getMobileFormWidget(context) {
     Size size = MediaQuery.of(context).size;
     return Column(
-      children:  [
-        Text("Verify Your Number",style: TextStyle(fontFamily: "oswald",fontSize: 25,fontWeight: FontWeight.bold),),
-        SizedBox(height: 45,),
-        TextField(
-          controller: phoneNumberController,
-          decoration: InputDecoration(hintText: "enter phone number"),
+      children: [
+        LogoText(firstText: "TODAY", secondText: "NEWS"),
+        const SizedBox(
+          height: 20,
         ),
-        // PhoneNumberInputField(
-        //   size: size,
-        //   controller: phoneNumberController,
-        //   hintText: "Enter Phone Number",
-        //   textInputAction: TextInputAction.send,
-        //   textInputType: TextInputType.phone),
-        const SizedBox(height: 16,),
-        FlatButton(onPressed: () async {
-          setState(() {
-            showLoading = true;
-          });
-          await _auth.verifyPhoneNumber(
-            phoneNumber: phoneNumberController.text,
-            
-            verificationCompleted: (PhoneAuthCredential) async {
-              setState(() {
-                showLoading = false;
-              });
-              print(phoneNumberController.text);
-            }, 
-            verificationFailed: (verificationFailed) async {
-              setState(() {
-                showLoading = false;
-              });
-              _scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text(verificationFailed.message as String)));
-            }, 
-            codeSent: (verificationId,resendingToken) async {
-              setState(() {
-                showLoading = false;
-                currentState = MobileVerificationState.SHOW_OTP_FORM_STATE;
-                this.verificationId = verificationId;
-              });
-            }, 
-            codeAutoRetrievalTimeout: (verificationId) async {
-
+        const Text(
+          "Verify Your Number",
+          style: TextStyle(
+              fontFamily: "oswald", fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+        PhoneNumberInputField(
+            size: size,
+            controller: phoneNumberController,
+            hintText: "Enter Phone Number",
+            textInputAction: TextInputAction.send,
+            textInputType: TextInputType.phone),
+        const SizedBox(
+          height: 16,
+        ),
+        CustomButton(
+          onPressed: () async {
+            setState(() {
+              showLoading = true;
             });
-        }, 
-        child: Text("SEND"),
-        color: Colors.blue,
-        textColor: Colors.white,),
-        Spacer()
+            await _auth.verifyPhoneNumber(
+                phoneNumber: "+91 ${phoneNumberController.text}",
+                // ignore: avoid_types_as_parameter_names, non_constant_identifier_names
+                verificationCompleted: (PhoneAuthCredential) async {
+                  setState(() {
+                    showLoading = false;
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Phone number Verified")));
+                },
+                verificationFailed: (verificationFailed) async {
+                  setState(() {
+                    showLoading = false;
+                  });
+                  Fluttertoast.showToast(
+                      msg: "Please check your network/phone number");
+                },
+                codeSent: (
+                  verificationId,
+                  resendingToken,
+                ) async {
+                  setState(() {
+                    showLoading = false;
+                    currentState = MobileVerificationState.SHOW_OTP_FORM_STATE;
+                    this.verificationId = verificationId;
+                  });
+                  Fluttertoast.showToast(msg: "Verification Code Sended");
+                },
+                codeAutoRetrievalTimeout: (verificationId) async {});
+          },
+          text: "Continue",
+          radius: BorderRadius.circular(15),
+          size: size,
+        ),
+        const Spacer()
       ],
     );
   }
 
-  getOtpFormWidget(context){
+  getOtpFormWidget(context) {
+    Size size = MediaQuery.of(context).size;
     return Column(
-      children:  [
-        const Spacer(),
-      
+      children: [
+        LogoText(firstText: "TODAY", secondText: "NEWS"),
+        const SizedBox(
+          height: 20,
+        ),
+        const Text(
+          "Enter OTP",
+          style: TextStyle(
+              fontFamily: "oswald", fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(
+          height: 30,
+        ),
         TextField(
           controller: otpController,
           decoration: const InputDecoration(hintText: "Enter OTP"),
         ),
-        const SizedBox(height: 16,),
-        FlatButton(onPressed: () async {
-          PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: otpController.text);
-          signInWithPhoneAuthCredential(phoneAuthCredential);
-        }, 
-        child: Text("verify"),
-        color: Colors.blue,
-        textColor: Colors.white,),
-        Spacer()
+        const SizedBox(
+          height: 15,
+        ),
+        CustomButton(
+          onPressed: () async {
+            PhoneAuthCredential phoneAuthCredential =
+                PhoneAuthProvider.credential(
+                    verificationId: verificationId,
+                    smsCode: otpController.text);
+            signInWithPhoneAuthCredential(phoneAuthCredential);
+          },
+          text: "verify",
+          radius: BorderRadius.circular(15),
+          size: size,
+        ),
+        const Spacer()
       ],
     );
   }
@@ -137,16 +174,31 @@ class _PhoneVerificationPageState extends State<PhoneVerificationPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.yellow,
-      key: _scaffoldKey,
-      body: Container(
-        padding: EdgeInsets.only(
-              top: size.height * 0.1,
-              left: size.width * 0.04,
-              right: size.width * 0.04),
-        child: showLoading ? Center(child: CircularProgressIndicator(),) : currentState == MobileVerificationState.SHOW_MOBILE_FORM_STATE?
-      getMobileFormWidget(context):getOtpFormWidget(context),
-      )
-    );
+        key: _scaffoldKey,
+        body: Container(
+            padding: EdgeInsets.only(
+                top: size.height * 0.1,
+                left: size.width * 0.04,
+                right: size.width * 0.04),
+            child: showLoading
+                ? Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        CircularProgressIndicator(),
+                        Text(
+                          "Verification in progress....",
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontFamily: "oswald",
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                : currentState == MobileVerificationState.SHOW_MOBILE_FORM_STATE
+                    ? getMobileFormWidget(context)
+                    : getOtpFormWidget(context)));
   }
 }

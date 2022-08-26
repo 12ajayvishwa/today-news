@@ -1,8 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:todaynews/screens/signup_page.dart';
-
-import 'phone_verification_page.dart';
 import 'signin_page.dart';
 
 class Home extends StatefulWidget {
@@ -14,6 +11,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
+
   final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
@@ -23,9 +21,10 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButton: FloatingActionButton(onPressed: () async {
         await _auth.signOut();
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInPage()));
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SignInPage()));
       },
-      child: Icon(Icons.logout),),
+      child:const Icon(Icons.logout),),
     );
   }
 }
