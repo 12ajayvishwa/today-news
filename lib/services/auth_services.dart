@@ -3,9 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:todaynews/model/user_data.dart';
-import 'package:todaynews/screens/home/dashboard.dart';
 import 'package:todaynews/screens/phone_verification_page.dart';
 import 'package:todaynews/screens/signin_page.dart';
+
+import '../screens/home/home.dart';
 
 class AuthClass {
   final _auth = FirebaseAuth.instance;
@@ -56,11 +57,17 @@ class AuthClass {
         .then((uid) => {
               Fluttertoast.showToast(msg: "Login Successfull :) "),
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => const Dashboard()))
+                  MaterialPageRoute(builder: (_) => const Home()))
             })
         .catchError((e) {
       Fluttertoast.showToast(msg: e!.message);
     });
+  }
+
+ Future<String> inputData() async {
+    final User? user = await _auth.currentUser;
+    final String uid = user!.uid.toString();
+  return uid;
   }
 
   Future<void> forgotPassword(String email, BuildContext context) async {

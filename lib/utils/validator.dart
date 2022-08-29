@@ -9,6 +9,17 @@ String? nameValidator(value) {
   return null;
 }
 
+String? titleValidator(value) {
+  RegExp regex = RegExp(r'^.{8,}$');
+  if (value!.isEmpty) {
+    return ("Please enter title");
+  }
+  if (!regex.hasMatch(value)) {
+    return ("Enter Valid title (Min. 8 Character)");
+  }
+  return null;
+}
+
 String? passwordValidator(value) {
   RegExp regex = RegExp(r'^.{6,}$');
   if (value!.isEmpty) {

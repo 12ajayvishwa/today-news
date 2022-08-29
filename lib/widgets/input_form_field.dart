@@ -7,6 +7,7 @@ class TextFormFields extends StatelessWidget {
   final TextEditingController controller;
   final FormFieldValidator validator;
   final String hintText;
+  final String? labelText;
   final TextInputType textInputType;
   final IconButton? iconButton;
   final bool? obsecureText;
@@ -19,6 +20,7 @@ class TextFormFields extends StatelessWidget {
       required this.validator,
       required this.hintText,
       required this.textInputType,
+      this.labelText,
       this.prefixIcon,
       this.iconButton,
       this.obsecureText,
@@ -47,10 +49,12 @@ class TextFormFields extends StatelessWidget {
           validator: validator,
           decoration: inputDecoration(
             hintText,
+            labelText: labelText,
             iconButton: iconButton,
             prefixIcon: prefixIcon
           ),
           obscureText: obsecureText ?? false,
+          
         ),
       ],
     );
@@ -109,3 +113,44 @@ class PhoneNumberInputField extends StatelessWidget {
     );
   }
 }
+
+
+class DescriptionField extends StatelessWidget {
+  final Size size;
+  final TextEditingController controller;
+  final String hintText;
+  final TextInputType textInputType;
+  final TextInputAction? textInputAction;
+  final String labelText;
+  const DescriptionField({Key? key, required this.size, required this.controller, required this.hintText, required this.textInputType, this.textInputAction, required this.labelText,}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: size.height * 0.15,
+      width: size.width * 0.9,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
+      child: TextFormField(
+      textAlign: TextAlign.start,
+      maxLines: 5,
+      textAlignVertical: TextAlignVertical.bottom,
+      autofocus: false,
+      controller: controller,
+      keyboardType: textInputType,
+      onSaved: (value) {
+        controller.text = value!;
+      },
+      validator:(value) {
+        return value!.isEmpty ? 'Blog description needed' : null;
+      },
+      textInputAction: textInputAction,
+      decoration: inputDecoration(
+        hintText,
+        labelText: labelText,
+      ),
+      
+    ),
+    );
+  }
+}
+

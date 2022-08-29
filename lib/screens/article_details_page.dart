@@ -50,11 +50,11 @@ class ArticleDetailsPage extends StatelessWidget {
                 width: 40,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(40),
-                    color: Colors.white.withOpacity(0.9)),
+                    color: Colors.black12.withOpacity(0.2)),
                 child: IconButton(
                   icon: const Icon(
                     Icons.arrow_back,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                   onPressed: () {
                     Navigator.pop(context);
@@ -71,22 +71,32 @@ class ArticleDetailsPage extends StatelessWidget {
                     borderRadius: BorderRadius.only(
                         topRight: Radius.circular(30),
                         topLeft: Radius.circular(30))),
+                
                 child: Padding(
                   padding:
                       const EdgeInsets.only(top: 15.0, left: 10, right: 10),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        
+                        const SizedBox(
+                          height: 15,
+                        ),
                         Text(
-                          article!.title ?? "",
+                          article!.description ?? "",
                           style: const TextStyle(
                               fontSize: 20,
                               fontFamily: "oswald",
-                              fontWeight: FontWeight.w600),
-                        )
+                              fontWeight: FontWeight.w300),
+                        ),
+                        SizedBox(height: 25,),
+                        Text(article!.content ?? "",style: const TextStyle(
+                              fontSize: 15,
+                              fontFamily: "oswald",
+                              ),)
                       ]),
                 ),
-              ))
+              )),
         ]),
       ),
     );

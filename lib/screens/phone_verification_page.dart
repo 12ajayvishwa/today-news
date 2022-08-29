@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:todaynews/widgets/custom_button.dart';
 import 'package:todaynews/widgets/logo_text.dart';
 import '../widgets/input_form_field.dart';
-import 'home/dashboard.dart';
+import 'home/home.dart';
 
 enum MobileVerificationState {
   // ignore: constant_identifier_names
@@ -49,7 +49,7 @@ class _PhoneVerificationPageState extends State<PhoneVerificationPage> {
       if (authCredential.user != null) {
         // ignore: use_build_context_synchronously
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const Dashboard()));
+            context, MaterialPageRoute(builder: (context) => const Home()));
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
