@@ -10,7 +10,9 @@ import '../widgets/logo_text.dart';
 import '../widgets/input_form_field.dart';
 
 class SignInPage extends StatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+  final AuthClass? auth;
+  final VoidCallback? onSignedIn;
+  const SignInPage({Key? key, this.auth, this.onSignedIn,}) : super(key: key);
 
   @override
   State<SignInPage> createState() => _SignInPageState();
@@ -134,8 +136,11 @@ class _SignInPageState extends State<SignInPage> {
             radius: BorderRadius.circular(15),
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
+                
                 await _authClass.signIn(
                     emailController.text, passwordController.text, context);
+
+              
                 setState(() {
                   showLoading = true;
                 });

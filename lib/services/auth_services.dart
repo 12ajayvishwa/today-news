@@ -84,5 +84,14 @@ class AuthClass {
     });
   }
 
+ Future<String> getCurrentUser() async {
+  User? user = _auth.currentUser;
+  final uid = user ?.uid;
+
+  return uid?? "";
+
+  
+}
+
 //
 }

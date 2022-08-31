@@ -5,10 +5,12 @@ import 'package:todaynews/widgets/custom_appbar.dart';
 import 'package:todaynews/widgets/custom_list_tile.dart';
 import 'package:todaynews/widgets/logo_text.dart';
 import '../../model/news_article_model.dart';
+import '../../services/auth_services.dart';
 import '../signin_page.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
+ 
+  const Dashboard({Key? key,}) : super(key: key);
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -39,6 +41,7 @@ class _DashboardState extends State<Dashboard> {
               // ignore: use_build_context_synchronously
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => const SignInPage()));
+              
             },
           ),
         ),

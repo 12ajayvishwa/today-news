@@ -7,6 +7,7 @@ import 'package:path/path.dart';
 import 'package:todaynews/screens/blog/add_blog_page.dart';
 import 'package:todaynews/screens/home/dashboard.dart';
 import 'package:todaynews/screens/user_profile_page.dart';
+import 'package:todaynews/services/auth_services.dart';
 import 'package:todaynews/utils/validator.dart';
 import 'package:todaynews/widgets/custom_text_button.dart';
 import 'package:todaynews/widgets/input_form_field.dart';
@@ -15,7 +16,9 @@ import 'dart:io';
 import '../blog/blog_page.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+   final AuthClass? auth;
+  final VoidCallback? onSignedOut;
+  const Home({Key? key, this.auth, this.onSignedOut}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -77,7 +80,7 @@ class _HomeState extends State<Home> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) =>  AddBlogPage()));
+          Navigator.push(context, MaterialPageRoute(builder: (_) =>  AddBlogPage(imageUrl: null,)));
     
         }
       ),

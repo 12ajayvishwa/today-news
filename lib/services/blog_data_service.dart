@@ -12,12 +12,12 @@ class BlogDataService {
 
 
   postBlogToFirestore(String authorName, String desc, String title,
-      String imageUrl, BuildContext context) async {
+      String? imageUrl, BuildContext context) async {
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
         User? user = _auth.currentUser;
 
-        BlogModel blogModel = BlogModel();
+        Blog blogModel = Blog();
 
         blogModel.authorName = authorName;
         blogModel.title = title;
