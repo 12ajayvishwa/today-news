@@ -83,7 +83,7 @@ class _AddBlogPageState extends State<AddBlogPage> {
     var formateTime = DateFormat('EEEE, hh:mm aaa');
 
     String date = formateDate.format(timeKey);
-    String time = formateDate.format(timeKey);
+    String time = formateTime.format(timeKey);
 
     DatabaseReference ref = FirebaseDatabase.instance.ref();
     var data = {
@@ -107,6 +107,8 @@ class _AddBlogPageState extends State<AddBlogPage> {
       saveToDatabase(_downloadedUrl);
     }
   }
+
+  
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:todaynews/screens/signin_page.dart';
+import 'package:todaynews/screens/user_profile_page.dart';
 import 'package:todaynews/services/auth_services.dart';
 import 'package:todaynews/services/linker.dart';
 

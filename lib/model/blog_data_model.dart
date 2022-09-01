@@ -30,7 +30,6 @@ toJson() {
     'desc' : desc ?? "",
     'time' : time ?? "",
     'date' : date ?? "",
-
   };
 }
 }
