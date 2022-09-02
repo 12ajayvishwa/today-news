@@ -156,8 +156,8 @@ class _BlogPageState extends State<BlogPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Date : "+blogs['date'],textAlign: TextAlign.center,),
-                Text("Time : "+blogs['time'],textAlign: TextAlign.center,),
+                Text(blogs['date'],textAlign: TextAlign.center,softWrap: true,),
+                Text(blogs['time'],textAlign: TextAlign.center,softWrap: true,),
                 DropdownButton(
                   icon: Icon(Icons.more_vert),
                   items: <String>['Edit','Delete']

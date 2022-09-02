@@ -117,7 +117,7 @@ class _HomeState extends State<Home> {
                   minWidth: 40,
                   onPressed: () {
                     setState(() {
-                      currentScreen = const UserProfilePage();
+                      currentScreen = UserProfilePage();
                       currentIndex = 2;
                     });
                   },
