@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:todaynews/screens/user_profile_page.dart';
 import 'package:todaynews/services/api_services.dart';
 import 'package:todaynews/widgets/custom_appbar.dart';
 import 'package:todaynews/widgets/custom_list_tile.dart';
@@ -36,6 +37,9 @@ class _DashboardState extends State<Dashboard> {
           child: CustomAppBar(
             color: const Color.fromARGB(31, 247, 241, 241),
             title: LogoText(firstText: "NEWS", secondText: "TODAY"),
+            profileTab: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => UserProfilePage()));
+            },
             logoutTab: () async {
               await _auth.signOut();
               // ignore: use_build_context_synchronously

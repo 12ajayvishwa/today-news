@@ -85,7 +85,8 @@ class _HomeState extends State<Home> {
         }
       ),
       bottomNavigationBar: BottomAppBar(
-          elevation: 5,
+       
+          
           shape: const CircularNotchedRectangle(),
           notchMargin: 10,
           child: SizedBox(
@@ -101,7 +102,7 @@ class _HomeState extends State<Home> {
                       currentIndex = 0;
                     });
                   },
-                  child: tabItems("News", Icons.notes, 0, context),
+                  child: tabItems("News", "assets/news.png", 0, context),
                 ),
                 MaterialButton(
                   minWidth: 40,
@@ -111,7 +112,7 @@ class _HomeState extends State<Home> {
                       currentIndex = 1;
                     });
                   },
-                  child: tabItems("Blog", Icons.pages, 1, context),
+                  child: tabItems("Blog", "assets/blogging.png", 1, context),
                 ),
                 MaterialButton(
                   minWidth: 40,
@@ -121,7 +122,7 @@ class _HomeState extends State<Home> {
                       currentIndex = 2;
                     });
                   },
-                  child: tabItems("User profiel", Icons.person, 2, context),
+                  child: tabItems("User profiel", "assets/user.png", 2, context),
                 )
               ],
             ),
@@ -129,14 +130,15 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Column tabItems(String text, IconData icon, int index, BuildContext context) {
+  Column tabItems(String text, String image, int index, BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Icon(
-        icon,
-        size: size.height / 25.76,
-        color: currentIndex == index ? Colors.black : Colors.grey,
-      ),
+      Image.asset(image,),
+      // Icon(
+      //   icon,
+      //   size: size.height / 25.76,
+      //   color: currentIndex == index ? Colors.black : Colors.grey,
+      // ),
       Text(
         text,
         style: TextStyle(

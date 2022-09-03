@@ -18,7 +18,7 @@ class BlogPage extends StatefulWidget {
 
 class _BlogPageState extends State<BlogPage> {
   List<Blog> blogList = [];
-  bool isLoading = false;
+  bool isLoading = true;
   bool isLiked = false;
   DatabaseReference blogsRef = FirebaseDatabase.instance.ref().child("blogs");
 
@@ -83,14 +83,10 @@ class _BlogPageState extends State<BlogPage> {
     });
   }
 
-//  Future<void> refreshBlogs() async {
-//   blogsRef.once().then((DatabaseEvent event){
-//     var blogKey = event.snapshot.keys;
-//     var b
-//   })
+ Future<void> refreshBlogs() async {
 
   
-//   }
+  }
 
   @override
   void initState() {
@@ -123,18 +119,21 @@ class _BlogPageState extends State<BlogPage> {
               centerTitle: true,
             ),
       body:
-      
       FirebaseAnimatedList(
+        defaultChild: Center(child: CircularProgressIndicator(
+        )),
           query: blogsRef, 
           itemBuilder: (context, snapshot, animation, index) {
             Map blogs = snapshot.value as Map;
-            blogs['key'] = snapshot.key;
-            return blogCard(blogs: blogs,context: context,blog: blogs[index]);
-          })
+            return 
+            blogCard(blogs: blogs,context: context,blog: blogs[index]);
+          }
+          )
     );
   }
 
   Widget blogCard({required Map blogs ,required BuildContext context,Blog? blog}){
+    
     return InkWell(
       onTap: (){
         Navigator.push(
@@ -183,7 +182,7 @@ class _BlogPageState extends State<BlogPage> {
             width: double.infinity,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: NetworkImage(blogs['image']),
+                    image: NetworkImage(blogs['image'] ?? ""),
                     fit: BoxFit.fitWidth),
                 borderRadius: BorderRadius.circular(12.0)),
           ),

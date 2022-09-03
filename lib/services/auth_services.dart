@@ -16,7 +16,7 @@ class AuthClass {
     await _auth
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) =>
-            {postDetailsToFirestore(name, phoneNumber, address, context)})
+            {postDetailsToFirestore(name, phoneNumber, address,context,)})
         .catchError((e) {
       Fluttertoast.showToast(msg: e!.message);
     });
