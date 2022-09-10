@@ -1,22 +1,16 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:path/path.dart';
-import 'package:todaynews/screens/blog/add_blog_page.dart';
 import 'package:todaynews/screens/home/dashboard.dart';
 import 'package:todaynews/screens/user_profile_page.dart';
-import 'package:todaynews/services/auth_services.dart';
-import 'package:todaynews/utils/validator.dart';
-import 'package:todaynews/widgets/custom_text_button.dart';
-import 'package:todaynews/widgets/input_form_field.dart';
+import 'package:todaynews/services/firebase/auth_services.dart';
 import 'dart:io';
-
-import '../blog/blog_page.dart';
+import '../blogs/body/blog_page.dart';
+import '../blogs/components/add_blog_page.dart';
 
 class Home extends StatefulWidget {
-   final AuthClass? auth;
+  final AuthClass? auth;
   final VoidCallback? onSignedOut;
   const Home({Key? key, this.auth, this.onSignedOut}) : super(key: key);
 
@@ -26,20 +20,16 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final formKey = GlobalKey<FormState>();
-  //000e697ec62d4f4184f318f61b8693a0
   final titleController = TextEditingController();
   final desController = TextEditingController();
-  FirebaseStorage storage = FirebaseStorage.instance;
+  final ImagePicker _imagePicker = ImagePicker();
 
   File? imageUrl;
   int currentIndex = 0;
 
-  final ImagePicker _imagePicker = ImagePicker();
-
   Future imgFromGallery() async {
     final pickedFile =
         await _imagePicker.pickImage(source: ImageSource.gallery);
-
     setState(() {
       if (pickedFile != null) {
         imageUrl = File(pickedFile.path);
@@ -56,9 +46,8 @@ class _HomeState extends State<Home> {
     try {
       final ref = FirebaseStorage.instance.ref(destination).child('file/');
       await ref.putFile(imageUrl!);
-
-
     } catch (e) {
+      // ignore: avoid_print
       print("error occured");
     }
   }
@@ -74,19 +63,16 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: PageStorage(bucket: bucket, child: currentScreen),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) =>  AddBlogPage(imageUrl: null,)));
-    
-        }
-      ),
+        backgroundColor: Color(0xFF38B6FF),
+          child: const Icon(Icons.add),
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const AddBlogPage()));
+          }),
       bottomNavigationBar: BottomAppBar(
-       
-          
           shape: const CircularNotchedRectangle(),
           notchMargin: 10,
           child: SizedBox(
@@ -118,11 +104,12 @@ class _HomeState extends State<Home> {
                   minWidth: 40,
                   onPressed: () {
                     setState(() {
-                      currentScreen = UserProfilePage();
+                      currentScreen = const UserProfilePage();
                       currentIndex = 2;
                     });
                   },
-                  child: tabItems("User profiel", "assets/user.png", 2, context),
+                  child:
+                      tabItems("User profiel", "assets/user1.png", 2, context),
                 )
               ],
             ),
@@ -130,15 +117,12 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Column tabItems(String text, String image, int index, BuildContext context) {
+  tabItems(String text, String image, int index, BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Image.asset(image,),
-      // Icon(
-      //   icon,
-      //   size: size.height / 25.76,
-      //   color: currentIndex == index ? Colors.black : Colors.grey,
-      // ),
+      Image.asset(
+        image,
+      ),
       Text(
         text,
         style: TextStyle(

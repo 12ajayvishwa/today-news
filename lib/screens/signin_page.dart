@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todaynews/screens/forget_password_page.dart';
 import 'package:todaynews/screens/signup_page.dart';
-import 'package:todaynews/services/auth_services.dart';
+import 'package:todaynews/services/firebase/auth_services.dart';
 import 'package:todaynews/utils/validator.dart';
 import 'package:todaynews/widgets/custom_text_button.dart';
 

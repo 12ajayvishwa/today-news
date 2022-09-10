@@ -1,8 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:todaynews/screens/signin_page.dart';
+import 'package:todaynews/screens/signup_page.dart';
 import 'package:todaynews/screens/user_profile_page.dart';
-import 'package:todaynews/services/auth_services.dart';
+import 'package:todaynews/services/firebase/auth_services.dart';
 import 'package:todaynews/services/linker.dart';
 
 import 'screens/home/home.dart';
@@ -14,7 +17,19 @@ void main() async {
   await Firebase.initializeApp();
   // ignore: avoid_print
   print("initialized");
-  runApp(const MyApp());
+  runApp( const MyApp());
+    
+  //   ScreenUtilInit(
+  //   designSize: Size(360, 690),
+  //   builder: (context, child) {
+  //     return GetMaterialApp(
+  //       debugShowCheckedModeBanner: false,
+  //       title: "Blog-App",
+  //       initialRoute: AppPages.INITIAL,
+  //       getPages: AppPages.routes,
+  //     );
+  //   },
+  // ));
 }
 
 class MyApp extends StatelessWidget {
@@ -27,7 +42,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: SignInPage()
+      home:Home()
     );
   }
 }

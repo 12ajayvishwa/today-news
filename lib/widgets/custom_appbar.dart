@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class CustomAppBar extends StatelessWidget {
-  Widget title;
+  Widget? title;
   VoidCallback? profileTab;
   VoidCallback? logoutTab;
-  Color color;
-
+  Widget? icon;
+  Color? color;
   CustomAppBar({
     Key? key,
-    required this.title,
+    this.title,
     this.profileTab,
     this.logoutTab,
-    required this.color,
+    this.icon,
+    this.color,
   }) : super(key: key);
 
   @override
@@ -41,15 +42,7 @@ class CustomAppBar extends StatelessWidget {
         ),
       ),
       title: title,
-      actions: [
-        IconButton(
-            onPressed: logoutTab,
-            icon: const Icon(
-              Icons.logout,
-              size: 25,
-              color: Colors.grey,
-            ))
-      ],
+      actions: [IconButton(onPressed: logoutTab,icon: icon!,)],
       centerTitle: true,
       backgroundColor: color,
       elevation: 0,

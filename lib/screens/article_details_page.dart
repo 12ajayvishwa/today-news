@@ -89,7 +89,7 @@ class ArticleDetailsPage extends StatelessWidget {
                               fontFamily: "oswald",
                               fontWeight: FontWeight.w300),
                         ),
-                        SizedBox(height: 25,),
+                        const SizedBox(height: 25,),
                         Text(article!.content ?? "",style: const TextStyle(
                               fontSize: 15,
                               fontFamily: "oswald",

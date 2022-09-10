@@ -1,7 +1,6 @@
-
-
-class Blog{
+class BlogModel{
   String? authorName;
+  String? id;
   String? title;
   String? desc;
   String? date;
@@ -9,8 +8,8 @@ class Blog{
   String? url;
   String? blogKey;
 
-  Blog(
-    {this.authorName,this.title,this.desc,this.url,this.date,this.time,this.blogKey});
+  BlogModel(
+    {this.authorName,this.id,this.title,this.desc,this.url,this.date,this.time,this.blogKey});
   
   //sending data to blog collection
 
@@ -31,5 +30,13 @@ toJson() {
     'time' : time ?? "",
     'date' : date ?? "",
   };
+}
+
+BlogModel.fromJson(Map<String,dynamic> map){
+  id = map['id'];
+  authorName = map['authorName'];
+  title = map['title'];
+  desc = map['desc'];
+  url = map['imageUrl'];
 }
 }

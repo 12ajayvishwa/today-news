@@ -4,7 +4,8 @@ class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final BorderRadius radius;
-  const CustomButton({Key? key, required this.text, required this.onPressed, required this.radius, required Size size}) : super(key: key);
+  final Color? color;
+  const CustomButton({Key? key, required this.text, required this.onPressed, required this.radius, required Size size,this.color,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,10 +13,12 @@ class CustomButton extends StatelessWidget {
     return InkWell(
       onTap: onPressed,
       child: Container(
+        
         height: size.height * 0.065,
         width: size.width * 0.45,
         decoration: BoxDecoration(
           borderRadius: radius,
+          
         ),
         child: Card(
           color: const Color(0xFF38B6FF),

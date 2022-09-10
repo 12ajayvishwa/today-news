@@ -6,19 +6,17 @@ import 'package:todaynews/widgets/custom_appbar.dart';
 import 'package:todaynews/widgets/custom_list_tile.dart';
 import 'package:todaynews/widgets/logo_text.dart';
 import '../../model/news_article_model.dart';
-import '../../services/auth_services.dart';
-import '../signin_page.dart';
 
 class Dashboard extends StatefulWidget {
- 
-  const Dashboard({Key? key,}) : super(key: key);
+  const Dashboard({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<Dashboard> createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
-  final _auth = FirebaseAuth.instance;
   ApiServices client = ApiServices();
 
   bool isLoading = false;
@@ -37,15 +35,10 @@ class _DashboardState extends State<Dashboard> {
           child: CustomAppBar(
             color: const Color.fromARGB(31, 247, 241, 241),
             title: LogoText(firstText: "NEWS", secondText: "TODAY"),
+            icon: const Icon(Icons.logout),
             profileTab: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => UserProfilePage()));
-            },
-            logoutTab: () async {
-              await _auth.signOut();
-              // ignore: use_build_context_synchronously
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const SignInPage()));
-              
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => const UserProfilePage()));
             },
           ),
         ),

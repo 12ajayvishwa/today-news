@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
 import 'package:todaynews/model/user_data.dart';
-import 'package:todaynews/services/auth_services.dart';
+
+import 'signin_page.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
@@ -18,18 +17,16 @@ class UserProfilePage extends StatefulWidget {
 
 class _UserProfilePageState extends State<UserProfilePage> {
   final formKey = GlobalKey<FormState>();
-
+final _auth = FirebaseAuth.instance;
   User? user = FirebaseAuth.instance.currentUser;
   final FirebaseAuth auth = FirebaseAuth.instance;
   final ImagePicker _imagePicker = ImagePicker();
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
-  
-  UserModel loggedInUser = UserModel();
 
-  String? _userName;
+  UserModel loggedInUser = UserModel();
   File? image;
- 
-  var profilePic = "";
+  String? userImage;
+
   bool isLoading = true;
   bool isUploaded = false;
 
@@ -45,35 +42,18 @@ class _UserProfilePageState extends State<UserProfilePage> {
   }
 
   Future uploadFile(File image) async {
-
     String downloadUrl;
-    String postId=DateTime.now().millisecondsSinceEpoch.toString();
-    Reference reference = FirebaseStorage.instance.ref('users').child("image").child("post_$postId.jpg");
+    String postId = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference reference = FirebaseStorage.instance
+        .ref('users')
+        .child("image")
+        .child("post_$postId.jpg");
     await reference.putFile(image);
     downloadUrl = await reference.getDownloadURL();
+    setState(() {
+      userImage = downloadUrl;
+    });
     return downloadUrl;
-    
-    // if (imageUrl == null) return;
-    // final filename = basename(imageUrl!.path);
-    // final destination = 'users$filename';
-    // final uid = auth.currentUser!.uid;
-
-    // try {
-    //   final ref = FirebaseStorage.instance.ref(destination).child('profilePic.jpg');
-    //   await ref.putFile(imageUrl!);
-
-    //   final UploadTask task = ref.putFile(imageUrl!);
-
-    //   var downloadUrl = await (await task).ref.getDownloadURL();
-    //   _downloadedUrl = downloadUrl.toString();
-    //   await saveToDatabase(_downloadedUrl);
-    //   setState(() {
-    //     profilePic = _downloadedUrl;
-    //   });
-    //   print("this is url $downloadUrl");
-    // } catch (e) {
-    //   print("error occured");
-    // }
   }
 
   Future uploadToDatabase() async {
@@ -81,11 +61,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     final users = _firebaseFirestore.collection('users');
     final uid = auth.currentUser;
     await users.doc(uid!.uid).update({'url': url});
-    // DatabaseReference ref = FirebaseDatabase.instance.ref();
-    // var data = {
-    //   "image": _downloadedUrl,
-    // };
-    // ref.child("users").push();
+
   }
 
   @override
@@ -106,118 +82,132 @@ class _UserProfilePageState extends State<UserProfilePage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return 
-    Scaffold(
-        body: isLoading ? Center(child: CircularProgressIndicator()):
-        
-        Container(
-            padding: EdgeInsets.only(left: 18, right: 18),
-            alignment: Alignment.center,
-            child: Column(
-              children: [
-                SizedBox(
-                  height: size.height * 0.1,
-                ),
-                image != null
-                    ? Container(
-                        height: size.height * 0.15,
-                        width: size.width * 0.25,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.blue, width: 2),
-                            image: DecorationImage(
-                              image: FileImage(
-                               image!
-                              ),
-                              fit: BoxFit.cover,
-                            )),
-                      )
-                    : Container(
-                        height: size.height * 0.15,
-                        width: size.width * 0.25,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.blue, width: 2),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"),
-                                fit: BoxFit.cover)),
-                      ),
-                Text(
-                  loggedInUser.name ?? "",
-                  softWrap: true,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: "oswald",
-                      fontSize: 25,
-                      fontWeight: FontWeight.w500),
-                ),
-                Text(
-                  loggedInUser.email ?? "",
-                  softWrap: true,
-                  style: TextStyle(
-                      color: Colors.grey,
-                      fontFamily: "oswald",
-                      fontSize: 18,
-                      fontWeight: FontWeight.w200),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Scaffold(
+        body: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Container(
+                padding: const EdgeInsets.only(left: 18, right: 18),
+                alignment: Alignment.center,
+                child: Column(
                   children: [
-                    ElevatedButton(
-                        onPressed: () {
-                          uploadToDatabase();
-                        },
-                        child: Text("Upload Your Photo")),
-                    ElevatedButton(
-                        onPressed: () {
-                          imgFromGallery();
-                        },
-                        child: Text("Change Your Photo")),
+                    SizedBox(
+                      height: size.height * 0.1,
+                    ),
+                    Container(
+                      height: size.height * 0.15,
+                      width: size.width * 0.25,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Color(0xFF38B6FF), width: 2),
+                          image: DecorationImage(
+                            image: userImage == ""
+                                ? const NetworkImage(
+                                    "https://png.pngtree.com/element_our/png/20181206/users-vector-icon-png_260862.jpg")
+                                : NetworkImage(loggedInUser.url ?? ""),
+                            fit: BoxFit.cover,
+                          )),
+                    ),
+                    Text(
+                      loggedInUser.name ?? "",
+                      softWrap: true,
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontFamily: "oswald",
+                          fontSize: 25,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      loggedInUser.email ?? "",
+                      softWrap: true,
+                      style: const TextStyle(
+                          color: Colors.grey,
+                          fontFamily: "oswald",
+                          fontSize: 18,
+                          fontWeight: FontWeight.w200),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+            style: ElevatedButton.styleFrom(primary: Color(0xFF38B6FF)),
+                            onPressed: () {
+                              uploadToDatabase();
+                            },
+                            child: const Text("Upload Your Photo")),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(primary: Color(0xFF38B6FF)),
+                            onPressed: () {
+                              imgFromGallery();
+                            },
+                            child: const Text("Change Your Photo")),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    userDeatils(
+                        size, "assets/user.png", loggedInUser.name, () {}),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    userDeatils(
+                        size, "assets/location.png", loggedInUser.address, () {
+                      print("hii");
+                    }),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    userDeatils(
+                        size, "assets/email_address.png", loggedInUser.email,
+                        () {
+                      print("hiii");
+                    }),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    userDeatils(
+                        size, "assets/telephone.png", loggedInUser.phoneNumber,
+                        () {
+                      // ignore: avoid_print
+                      print("hiiii");
+                    }),
+                    const SizedBox(height: 25,),
+                    InkWell(
+                      onTap: () async {
+              await _auth.signOut();
+              // ignore: use_build_context_synchronously
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const SignInPage()));
+              
+            },
+                      child: Column(
+                        children: [
+                          Image.asset("assets/power-off.png"),
+                          const Text(
+                            "Logout",
+                            style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 25,
+                                fontFamily: "Lato"),
+                          )
+                        ],
+                      ),
+                    )
                   ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                userDeatils(size, "assets/user.png", loggedInUser.name, () {
-                  
-                }),
-                SizedBox(
-                  height: 8,
-                ),
-                userDeatils(size, "assets/location.png", loggedInUser.address,
-                    () {
-                  print("hii");
-                }),
-                SizedBox(
-                  height: 8,
-                ),
-                userDeatils(
-                    size, "assets/email_address.png", loggedInUser.email, () {
-                  print("hiii");
-                }),
-                SizedBox(
-                  height: 8,
-                ),
-                userDeatils(
-                    size, "assets/telephone.png", loggedInUser.phoneNumber, () {
-                  print("hiiii");
-                })
-              ],
-            )));
+                )));
   }
 
   userDeatils(Size size, String image, loggedInUser, VoidCallback onTap) {
     return Container(
-        height: size.height / 9.5,
+        height: size.height * 0.08,
         width: size.width,
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
         alignment: Alignment.center,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(
               Radius.circular(18),
@@ -239,12 +229,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     height: 30,
                     width: 30,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 15,
                   ),
                   Text(
                     loggedInUser ?? "",
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.black,
                         fontFamily: "Lato",
                         fontSize: 20,

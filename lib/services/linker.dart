@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:todaynews/screens/home/dashboard.dart';
 import 'package:todaynews/screens/home/home.dart';
 
-import 'package:todaynews/services/auth_services.dart';
+import 'package:todaynews/services/firebase/auth_services.dart';
 
 import '../screens/signin_page.dart';
 
