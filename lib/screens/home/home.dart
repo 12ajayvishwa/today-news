@@ -6,6 +6,7 @@ import 'package:todaynews/screens/home/dashboard.dart';
 import 'package:todaynews/screens/user_profile_page.dart';
 import 'package:todaynews/services/firebase/auth_services.dart';
 import 'dart:io';
+import '../../model/user_data.dart';
 import '../blogs/body/blog_page.dart';
 import '../blogs/components/add_blog_page.dart';
 
@@ -23,6 +24,7 @@ class _HomeState extends State<Home> {
   final titleController = TextEditingController();
   final desController = TextEditingController();
   final ImagePicker _imagePicker = ImagePicker();
+  
 
   File? imageUrl;
   int currentIndex = 0;

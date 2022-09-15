@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -17,7 +18,7 @@ class UserProfilePage extends StatefulWidget {
 
 class _UserProfilePageState extends State<UserProfilePage> {
   final formKey = GlobalKey<FormState>();
-final _auth = FirebaseAuth.instance;
+  final _auth = FirebaseAuth.instance;
   User? user = FirebaseAuth.instance.currentUser;
   final FirebaseAuth auth = FirebaseAuth.instance;
   final ImagePicker _imagePicker = ImagePicker();
@@ -61,7 +62,6 @@ final _auth = FirebaseAuth.instance;
     final users = _firebaseFirestore.collection('users');
     final uid = auth.currentUser;
     await users.doc(uid!.uid).update({'url': url});
-
   }
 
   @override
@@ -97,16 +97,37 @@ final _auth = FirebaseAuth.instance;
                       height: size.height * 0.15,
                       width: size.width * 0.25,
                       decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Color(0xFF38B6FF), width: 2),
-                          image: DecorationImage(
-                            image: userImage == ""
-                                ? const NetworkImage(
-                                    "https://png.pngtree.com/element_our/png/20181206/users-vector-icon-png_260862.jpg")
-                                : NetworkImage(loggedInUser.url ?? ""),
-                            fit: BoxFit.cover,
-                          )),
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Color(0xFF38B6FF), width: 2),
+                        // image: DecorationImage(
+                        //   // image:image == null
+                        //   //     ? const NetworkImage(
+                        //   //         "https://png.pngtree.com/element_our/png/20181206/users-vector-icon-png_260862.jpg")
+                        //   //     : MemoryImage(image!),
+                        //   fit: BoxFit.cover,
+                        // )),
+                      ),
+                      child: 
+                      image != null
+                          ? CircleAvatar(
+                              radius: 50,
+                              backgroundColor: Colors.white,
+                              backgroundImage: FileImage(image!),
+                            )
+                          : userImage == null ?
+                          CircleAvatar(
+                            radius: 50,
+                            backgroundColor: Colors.white,
+                            backgroundImage: NetworkImage(loggedInUser.url ?? ""),
+                          ):
+                          
+                          CircleAvatar(
+                              radius: 50,
+                              backgroundColor: Colors.white,
+                              backgroundImage: NetworkImage(
+                                  "https://png.pngtree.com/element_our/png/20181206/users-vector-icon-png_260862.jpg"),
+                            )
                     ),
                     Text(
                       loggedInUser.name ?? "",
@@ -133,13 +154,15 @@ final _auth = FirebaseAuth.instance;
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ElevatedButton(
-            style: ElevatedButton.styleFrom(primary: Color(0xFF38B6FF)),
+                            style: ElevatedButton.styleFrom(
+                                primary: Color(0xFF38B6FF)),
                             onPressed: () {
                               uploadToDatabase();
                             },
                             child: const Text("Upload Your Photo")),
                         ElevatedButton(
-                          style: ElevatedButton.styleFrom(primary: Color(0xFF38B6FF)),
+                            style: ElevatedButton.styleFrom(
+                                primary: Color(0xFF38B6FF)),
                             onPressed: () {
                               imgFromGallery();
                             },
@@ -175,15 +198,18 @@ final _auth = FirebaseAuth.instance;
                       // ignore: avoid_print
                       print("hiiii");
                     }),
-                    const SizedBox(height: 25,),
+                    const SizedBox(
+                      height: 25,
+                    ),
                     InkWell(
                       onTap: () async {
-              await _auth.signOut();
-              // ignore: use_build_context_synchronously
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const SignInPage()));
-              
-            },
+                        await _auth.signOut();
+                        // ignore: use_build_context_synchronously
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignInPage()));
+                      },
                       child: Column(
                         children: [
                           Image.asset("assets/power-off.png"),

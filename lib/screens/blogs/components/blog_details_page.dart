@@ -22,7 +22,7 @@ class BlogDetailsPage extends StatelessWidget {
             decoration: BoxDecoration(
                 color: Colors.black12,
                 image: DecorationImage(
-                    image: NetworkImage(blogs.url??""), fit: BoxFit.cover)),
+                    image: NetworkImage(blogs.url ?? ""), fit: BoxFit.cover)),
           )),
           Positioned(
               top: 27,

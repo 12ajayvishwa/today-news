@@ -61,6 +61,7 @@ class _BlogPageState extends State<BlogPage> {
                 .orderBy('id')
                 .snapshots(),
             builder: ((context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+              
               if (streamSnapshot.hasData) {
                 final blogs = streamSnapshot.data!.docs;
                 switch (streamSnapshot.connectionState) {
@@ -78,7 +79,8 @@ class _BlogPageState extends State<BlogPage> {
               // return const Center(
               //   child: CircularProgressIndicator(),
               // );
-            })));
+            }),
+            ));
   }
 
   ListView blogListView(
@@ -92,10 +94,18 @@ class _BlogPageState extends State<BlogPage> {
               streamSnapshot.data!.docs[index];
           return InkWell(
             onTap: () {
-              Navigator.push(
+              WidgetsBinding.instance.addPostFrameCallback((_) => Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (_) => BlogDetailsPage(blogs: blogs)));
+                      builder: (_) => BlogDetailsPage(blogs: blogs))));
+
+
+
+
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (_) => BlogDetailsPage(blogs: blogs)));
             },
             child: Container(
               margin: const EdgeInsets.all(12.0),
@@ -136,16 +146,19 @@ class _BlogPageState extends State<BlogPage> {
                   Stack(
                     alignment: Alignment.center,
                     children: [InkWell(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => BlogDetailsPage(blogs: blogs)));
+                      },
                       onDoubleTap: () {
                         isLikedFunc();
                         // String uid = streamSnapshot.data!.docs[index]['uid'];
 
-                        print('lekeRef not null $likeRef');
+                        // print('likeRef not null $likeRef');
                         // likeRef!.get().then((value) => {
                         //   if(value.data != null){
                         //     if(value.data.keys.contains(uid)){
                         //       FirebaseFirestore.instance.
-                        //     }
+                        // }
                         //   }
                         // });
                       },

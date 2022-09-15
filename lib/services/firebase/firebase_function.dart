@@ -20,19 +20,22 @@ class FirebaseFunction {
   int _documentLimit = 5;
   var isLoading = false.obs;
 
-  Future<void> createUserCredential(String name,String email,String address,String phoneNumber) async {
-    try{
-      await _firebaseFirestore.collection('users').doc(_auth.currentUser!.uid).set({
+  Future<void> createUserCredential(
+      String name, String email, String address, String phoneNumber) async {
+    try {
+      await _firebaseFirestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .set({
         'uid': _auth.currentUser!.uid,
-        "name":name,
-        "email":email,
-        "addrss":address,
-        "phoneNumber":phoneNumber
+        "name": name,
+        "email": email,
+        "addrss": address,
+        "phoneNumber": phoneNumber
       }).then((value) {
         Indicator.closeLoading();
-
       });
-    } catch (e){
+    } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
   }
@@ -182,6 +185,7 @@ class FirebaseFunction {
           url: "");
     }
   }
+
   Future<void> deletePublicBlog(String id) async {
     try {
       await _firebaseFirestore.collection('blogs').doc(id).delete();
@@ -203,7 +207,8 @@ class FirebaseFunction {
     }
   }
 
-  Future<void> editBlog(String id, Map<String, dynamic> map,BuildContext context) async {
+  Future<void> editBlog(
+      String id, Map<String, dynamic> map, BuildContext context) async {
     try {
       await _firebaseFirestore.collection('blogs').doc().update(map);
       Fluttertoast.showToast(msg: "blog updated sucessfully");
@@ -256,7 +261,7 @@ class FirebaseFunction {
     }
   }
 
-  Future<void> deleteBlog(String id,BuildContext context) async {
+  Future<void> deleteBlog(String id, BuildContext context) async {
     final CollectionReference ref =
         FirebaseFirestore.instance.collection('blogs');
     try {

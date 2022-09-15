@@ -10,24 +10,6 @@ class ArticleDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      // appBar: AppBar(
-      //   elevation: 0,
-      //   backgroundColor: Color.fromARGB(31, 247, 241, 241),
-      //   title: Text(
-      //     article!.title ?? "",
-      //     style: TextStyle(color: Colors.blue, fontFamily: "oswald"),
-      //   ),
-      //   leading: IconButton(
-      //     icon: Icon(
-      //       Icons.arrow_back,
-      //       color: Colors.blue,
-      //       size: 25,
-      //     ),
-      //     onPressed: () {
-      //       Navigator.pop(context);
-      //     },
-      //   ),
-      // ),
       body: SizedBox(
         height: size.height,
         width: size.width,
