@@ -247,8 +247,8 @@ class _BlogPageState extends State<BlogPage> {
 
   AppBar feedAppBar(BuildContext context) {
     return AppBar(
-      elevation: 0,
       backgroundColor: const Color.fromARGB(31, 247, 241, 241),
+      elevation: 0,
       title: const Text(
         "Feed",
         textAlign: TextAlign.center,
