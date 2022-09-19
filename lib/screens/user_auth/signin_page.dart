@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:todaynews/screens/forget_password_page.dart';
-import 'package:todaynews/screens/signup_page.dart';
+import 'package:todaynews/screens/user_auth/signup_page.dart';
 import 'package:todaynews/services/firebase/auth_services.dart';
 import 'package:todaynews/utils/validator.dart';
 import 'package:todaynews/widgets/custom_text_button.dart';
 
-import '../widgets/custom_button.dart';
-import '../widgets/logo_text.dart';
-import '../widgets/input_form_field.dart';
+import '../../widgets/custom_button.dart';
+import '../../widgets/logo_text.dart';
+import '../../widgets/input_form_field.dart';
+import 'forget_password_page/forget_password_page.dart';
 
 class SignInPage extends StatefulWidget {
   final AuthClass? auth;

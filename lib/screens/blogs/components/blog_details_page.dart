@@ -4,7 +4,7 @@ import 'package:todaynews/model/blog_data_model.dart';
 
 
 class BlogDetailsPage extends StatelessWidget {
-  BlogModel blogs = BlogModel();
+  Blog blogs = Blog();
   BlogDetailsPage({required List<QueryDocumentSnapshot<Object?>> blogs});
 
   @override
@@ -22,7 +22,7 @@ class BlogDetailsPage extends StatelessWidget {
             decoration: BoxDecoration(
                 color: Colors.black12,
                 image: DecorationImage(
-                    image: NetworkImage(blogs.url ?? ""), fit: BoxFit.cover)),
+                    image: NetworkImage(blogs.postUrl.toString()), fit: BoxFit.cover)),
           )),
           Positioned(
               top: 27,

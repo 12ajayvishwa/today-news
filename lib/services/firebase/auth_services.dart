@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:todaynews/model/user_data.dart';
-import 'package:todaynews/screens/signin_page.dart';
-import 'package:todaynews/screens/signup_page.dart';
-
-import '../../screens/home/home.dart';
+import 'package:todaynews/screens/user_auth/signin_page.dart';
+import '../../screens/home/components/home.dart';
 
 class AuthClass {
   final _auth = FirebaseAuth.instance;
@@ -35,34 +33,6 @@ class AuthClass {
     }
   }
 
-  // Future<void> verifyPhoneNumber(String phoneNumber,BuildContext context,currentState) async {
-  //   late String verificationId;
-  //   try{
-  //     await _auth.verifyPhoneNumber(
-  //       phoneNumber: phoneNumber,
-  //       verificationCompleted: (PhoneAuthCredential) async {
-  //                 ScaffoldMessenger.of(context).showSnackBar(
-  //                     const SnackBar(content: Text("Verification code sended")),
-  //                     );
-  //               },
-  //       verificationFailed: (verificationFailed) async {
-  //         Fluttertoast.showToast(
-  //                     msg: "Please check your network/phone number");
-  //       }, 
-  //       codeSent: (verificationId,
-  //                 resendingToken,) async {
-  //                   currentState = MobileVerificationState.SHOW_OTP_FORM_STATE;
-  //                   Fluttertoast.showToast(msg: "Verification Code Sended");
-                    
-  //                 }, 
-  //       codeAutoRetrievalTimeout: (verificationId) async {});
-  //       const Center(
-  //                 child: CircularProgressIndicator(),
-  //               );
-  //   }catch (e){
-  //      Fluttertoast.showToast(msg: "$e");
-  //   }
-  // }
 
   postDetailsToFirestore(String name, String phoneNumber, String address,
       BuildContext context) async {
@@ -89,7 +59,6 @@ class AuthClass {
         const SnackBar(content: Text("Account created successfully :) ")));
     // ignore: use_build_context_synchronously
   }
-
   Future<void> signIn(
       String email, String password, BuildContext context) async {
     await _auth
@@ -103,13 +72,6 @@ class AuthClass {
       Fluttertoast.showToast(msg: e!.message);
     });
   }
-
-  Future<String> inputData() async {
-    final User? user = await _auth.currentUser;
-    final String uid = user!.uid.toString();
-    return uid;
-  }
-
   Future<void> forgotPassword(String email, BuildContext context) async {
     await _auth
         .sendPasswordResetEmail(email: email)
@@ -123,14 +85,4 @@ class AuthClass {
       Fluttertoast.showToast(msg: e!.message);
     });
   }
-
-  Future<String> getCurrentUser() async {
-    User? user = _auth.currentUser;
-
-    final uid = user?.uid;
-
-    return uid ?? "";
-  }
-
-//
 }

@@ -27,8 +27,8 @@ class _AddBlogPageState extends State<AddBlogPage> {
   final titleController = TextEditingController();
   final descController = TextEditingController();
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  BlogModel blogModel = BlogModel();
 
   File? imageUrl;
   // ignore: prefer_typing_uninitialized_variables
@@ -53,7 +53,7 @@ class _AddBlogPageState extends State<AddBlogPage> {
     });
   }
 
-  void uploadImage(BuildContext context, url) async {
+  void uploadImage(BuildContext context, url,) async {
     if (imageUrl == null) return;
     setState(() {
       isLoading = true;
@@ -81,7 +81,8 @@ class _AddBlogPageState extends State<AddBlogPage> {
   }
 
   Future<void> saveToDatabase(url, BuildContext context) async {
-    String id = const Uuid().v1();
+    String blogId = const Uuid().v1();
+    String uid = _auth.currentUser!.uid;
     var timeKey = DateTime.now();
     var formateDate = DateFormat('MMM d, yyyy');
     var formateTime = DateFormat('EEEE, hh:mm aaa');
@@ -93,21 +94,23 @@ class _AddBlogPageState extends State<AddBlogPage> {
     final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     goToBlogPage(context);
     Map<String, dynamic> blogDetails = {
-      'id': id,
+      'blogId': blogId,
+      'uid':uid,
       'authorName': authorNameController.text,
       'title': titleController.text,
       'desc': descController.text,
       'url': url,
+      'likes':{},
       'date': date,
       'time': time
     };
 
     await firebaseFirestore
         .collection('blogs')
-        .doc(id)
+        .doc(blogId)
         .set(blogDetails)
         .then((value) {
-      saveDataToMyBlogs(id);
+      saveDataToMyBlogs(blogId);
     });
   }
 
@@ -141,7 +144,7 @@ class _AddBlogPageState extends State<AddBlogPage> {
   }
 
   void goToBlogPage(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (_) => BlogPage()));
+    Navigator.push(context, MaterialPageRoute(builder: (_) => BlogPage(snap: null,)));
   }
 
   void validateAndSubmit(BuildContext context) {

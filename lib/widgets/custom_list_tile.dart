@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todaynews/model/news_article_model.dart';
-import 'package:todaynews/screens/article_details_page.dart';
+import 'package:todaynews/screens/article_page/article_details_page.dart';
 
 Widget custtomListTile(Article article, BuildContext context) {
   return InkWell(

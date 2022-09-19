@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:todaynews/screens/home/home.dart';
-import 'package:todaynews/screens/signin_page.dart';
+import 'package:todaynews/screens/home/components/home.dart';
+import 'package:todaynews/screens/user_auth/signin_page.dart';
 import 'package:todaynews/services/firebase/auth_services.dart';
 
 class Linker extends StatefulWidget {

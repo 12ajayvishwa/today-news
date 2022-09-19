@@ -3,7 +3,7 @@ String? nameValidator(value) {
   if (value!.isEmpty) {
     return ("Please enter name");
   }
-  if (!regex.hasMatch(value)) {
+  if (!regex.hasMatch(value.toString())) {
     return ("Enter Valid name(Min. 3 Character)");
   }
   return null;

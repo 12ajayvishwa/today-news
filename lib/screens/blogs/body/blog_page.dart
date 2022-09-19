@@ -1,86 +1,75 @@
 // ignore_for_file: deprecated_member_use
-import 'dart:async';
+
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todaynews/screens/blogs/components/blog_details_page.dart';
-import 'package:todaynews/screens/home/home.dart';
+import 'package:todaynews/screens/blogs/components/comment.dart';
+import 'package:todaynews/screens/home/components/home.dart';
 import 'package:todaynews/services/firebase/firebase_function.dart';
 import 'package:todaynews/utils/style/text_style.dart';
-import '../../../model/blog_data_model.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/input_form_field.dart';
 import '../components/update_blog_widget.dart';
 
 class BlogPage extends StatefulWidget {
-  const BlogPage({Key? key}) : super(key: key);
-
+  final snap;
+  BlogPage({required this.snap});
   @override
   State<BlogPage> createState() => _BlogPageState();
 }
 
 class _BlogPageState extends State<BlogPage> {
-  String? refresh;
-  CollectionReference? postRef;
-  DocumentReference? likeRef;
-  String? uid;
-  int count = 0;
-  bool isLiked = false;
-  Map<String, dynamic>? data;
-  DocumentSnapshot? ds;
+  FirebaseAuth auth = FirebaseAuth.instance;
+  final blogRef = FirebaseFirestore.instance.collection("blogs");
+  final userRef = FirebaseFirestore.instance.collection("users");
+  final DateTime timestamp = DateTime.now();
+  int likeCount = 0;
+  Map? likes;
+  bool isliked = false;
 
-  @override
-  void initState() {
-    likeRef = FirebaseFirestore.instance.collection('likes').doc(uid);
-    super.initState();
-    likeRef!.get().then((value) => data = value.data as Map<String, dynamic>?);
-    postRef = FirebaseFirestore.instance.collection('blogs');
-  }
-
-  isLikedFunc(){
-    setState(() {
-      isLiked = true;
-    });
-    if(isLiked){
-      Timer(Duration(milliseconds: 500),(){
-        setState(() {
-          isLiked = false;
-        });
-      });
+  int getLikeCount(likes) {
+    if (likes == null) {
+      return 0;
     }
+    int count = 0;
+    likes.value.forEach((val) {
+      if (val == true) {
+        count = count + 1;
+      }
+    });
+    return count;
   }
+
+  
+
 
   @override
   Widget build(BuildContext context) {
-    print('data $data');
     return Scaffold(
         appBar: feedAppBar(context),
         body: StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('blogs')
-                .orderBy('id')
-                .snapshots(),
-            builder: ((context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-              
-              if (streamSnapshot.hasData) {
-                final blogs = streamSnapshot.data!.docs;
-                switch (streamSnapshot.connectionState) {
-                  case ConnectionState.none:
-                  case ConnectionState.waiting:
-                  default:
-                    return blogListView(blogs, streamSnapshot, context);
-                }
-                // return blogListView(blogs, streamSnapshot, context);
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+          stream: FirebaseFirestore.instance
+              .collection('blogs')
+              .orderBy('date',descending: true)
+              .snapshots(),
+          builder: ((context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+            if (streamSnapshot.hasData) {
+              final blogs = streamSnapshot.data!.docs;
+              switch (streamSnapshot.connectionState) {
+                case ConnectionState.waiting:
+                default:
+                  return blogListView(blogs, streamSnapshot, context);
               }
-              // return const Center(
-              //   child: CircularProgressIndicator(),
-              // );
-            }),
-            ));
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
+        ));
   }
 
   ListView blogListView(
@@ -94,18 +83,11 @@ class _BlogPageState extends State<BlogPage> {
               streamSnapshot.data!.docs[index];
           return InkWell(
             onTap: () {
-              WidgetsBinding.instance.addPostFrameCallback((_) => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => BlogDetailsPage(blogs: blogs))));
-
-
-
-
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (_) => BlogDetailsPage(blogs: blogs)));
+              WidgetsBinding.instance.addPostFrameCallback((_) =>
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => BlogDetailsPage(blogs: blogs))));
             },
             child: Container(
               margin: const EdgeInsets.all(12.0),
@@ -143,24 +125,19 @@ class _BlogPageState extends State<BlogPage> {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [InkWell(
+                  Stack(alignment: Alignment.center, children: [
+                    InkWell(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => BlogDetailsPage(blogs: blogs)));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => BlogDetailsPage(blogs: blogs)));
                       },
                       onDoubleTap: () {
-                        isLikedFunc();
-                        // String uid = streamSnapshot.data!.docs[index]['uid'];
-
-                        // print('likeRef not null $likeRef');
-                        // likeRef!.get().then((value) => {
-                        //   if(value.data != null){
-                        //     if(value.data.keys.contains(uid)){
-                        //       FirebaseFirestore.instance.
-                        // }
-                        //   }
-                        // });
+                        setState(() {
+                          isliked = !isliked;
+                          likeCount = likeCount+1;
+                        });
                       },
                       child: Container(
                         height: 200.0,
@@ -170,18 +147,13 @@ class _BlogPageState extends State<BlogPage> {
                                 image: documentSnapshot['url'] == null
                                     ? const NetworkImage(
                                         "https://img.freepik.com/free-vector/no-data-concept-illustration_114360-2506.jpg?w=740&t=st=1662625292~exp=1662625892~hmac=9461f11097496c9db0e8fbc9f8441cd24b4f85bdb8df6b128f98257ccda67e78")
-                                    : NetworkImage(documentSnapshot['url'] ?? ""),
+                                    : NetworkImage(
+                                        documentSnapshot['url'] ?? ""),
                                 fit: BoxFit.fitWidth),
                             borderRadius: BorderRadius.circular(12.0)),
                       ),
                     ),
-                    isLiked?Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                      child: Icon(Icons.favorite,color: Colors.white60,size: 80,),),
-                    ):Container()
-                    ]
-                  ),
+                  ]),
                   const SizedBox(
                     height: 8,
                   ),
@@ -213,31 +185,40 @@ class _BlogPageState extends State<BlogPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
-                        children: [
-                          data != null &&
-                                  data!.containsKey(
-                                      streamSnapshot.data!.docs[index]['id'])
-                              ? const Icon(
-                                  Icons.favorite,
-                                  color: Colors.red,
-                                  size: 25,
-                                )
-                              : const Icon(
-                                Icons.favorite_border_outlined,color: Colors.grey,size: 25,
-                              ),
-                              
-                              
-                              
-                              
-                              // IconButton(
-                              //     icon: const Icon(
-                              //       Icons.favorite_border,
-                              //       size: 28.0,
-                              //       color: Colors.grey,
-                              //     ),
-                              //     onPressed: () {},
-                              //   ),
-                          // Text('${streamSnapshot.data!.docs[index]['likes']}',style: TextStyle(color: Colors.black),)
+                        children:  [
+                          likeCount == 0?
+                          IconButton(
+                            onPressed: (){
+                              // FirebaseFunction().likePost(
+                              //   widget.snap['blogId'].toString(), 
+                              //   FirebaseAuth.instance.currentUser!.uid, 
+                              //   widget.snap['likes']);
+                              setState(() {
+                                likeCount = likeCount++;
+                              });
+                            },
+                            icon: Icon(
+                              Icons.favorite_border_outlined,
+                              color: Colors.grey,
+                              size: 25,
+                            ),
+                          ):IconButton(
+                            onPressed: (){
+                              // FirebaseFunction().likePost(
+                              //   widget.snap['blogId'].toString(), 
+                              //   FirebaseAuth.instance.currentUser!.uid, 
+                              //   widget.snap['likes']);
+                              setState(() {
+                                likeCount = likeCount--;
+                              });
+                            },
+                            icon: Icon(
+                              Icons.favorite_border_outlined,
+                              color: Colors.red,
+                              size: 25,
+                            ),
+                          ),
+                          Text("${likeCount} Likes")
                         ],
                       ),
                       Row(
@@ -247,14 +228,16 @@ class _BlogPageState extends State<BlogPage> {
                               Icons.comment_outlined,
                               color: Colors.grey,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (_) => Comments()));
+                            },
                           ),
                           const Text("Reply")
                         ],
                       )
                     ],
                   ),
-                  // Text(blog!.like!.length.toString())
+                  
                 ],
               ),
             ),

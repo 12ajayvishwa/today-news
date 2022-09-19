@@ -2,13 +2,13 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
-import 'package:todaynews/screens/home/dashboard.dart';
-import 'package:todaynews/screens/user_profile_page.dart';
+import 'package:todaynews/screens/home/body/dashboard.dart';
+import 'package:todaynews/screens/profile_page/user_profile_page.dart';
 import 'package:todaynews/services/firebase/auth_services.dart';
 import 'dart:io';
-import '../../model/user_data.dart';
-import '../blogs/body/blog_page.dart';
-import '../blogs/components/add_blog_page.dart';
+import '../../../model/user_data.dart';
+import '../../blogs/body/blog_page.dart';
+import '../../blogs/components/add_blog_page.dart';
 
 class Home extends StatefulWidget {
   final AuthClass? auth;
@@ -56,7 +56,7 @@ class _HomeState extends State<Home> {
 
   final List<Widget> pages = [
     const Dashboard(),
-    const BlogPage(),
+    BlogPage(snap: null,),
     const UserProfilePage()
   ];
 
@@ -96,7 +96,7 @@ class _HomeState extends State<Home> {
                   minWidth: 40,
                   onPressed: () {
                     setState(() {
-                      currentScreen = const BlogPage();
+                      currentScreen = BlogPage(snap: null,);
                       currentIndex = 1;
                     });
                   },

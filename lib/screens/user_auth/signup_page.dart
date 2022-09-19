@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:sms_autofill/sms_autofill.dart';
-import 'package:todaynews/screens/signin_page.dart';
+import 'package:todaynews/screens/user_auth/signin_page.dart';
 import 'package:todaynews/services/firebase/auth_services.dart';
 import 'package:todaynews/utils/validator.dart';
 import 'package:todaynews/widgets/input_form_field.dart';
 
-import '../widgets/custom_button.dart';
-import '../widgets/custom_text_button.dart';
-import '../widgets/logo_text.dart';
-import 'home/home.dart';
+import '../../widgets/custom_button.dart';
+import '../../widgets/custom_text_button.dart';
+import '../../widgets/logo_text.dart';
+import '../home/components/home.dart';
 
 enum MobileVerificationState {
   // ignore: constant_identifier_names
@@ -113,7 +113,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       children: const [
                         CircularProgressIndicator(),
                         Text(
-                          "Verification in progress....",
+                          "Verification in + progress....",
                           style: TextStyle(
                             fontSize: 25,
                             fontFamily: "oswald",
@@ -122,9 +122,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       ],
                     ),
                   ): currentState == MobileVerificationState.SHOW_REGISTER_STATE
-                    ? signupFormWidget(size:size,context:context)
-                    
-                    :getOtpFormWidget(context)
+                    ? 
+                  signupFormWidget(size:size,context:context):getOtpFormWidget(context)
+
                     
                     
                   
@@ -200,8 +200,10 @@ class _SignUpPageState extends State<SignUpPage> {
           PhoneNumberInputField(
             controller: phoneNumberController,
             hintText: 'Enter phone number',
+            validator: phoneNumberValidator,
             size: size,
-            textInputType: TextInputType.phone,
+            textInputType: TextInputType.number,
+    
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(
@@ -326,7 +328,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
             },
             keyboardType: TextInputType.number,
-            pinBoxWidth: 50,
+            pinBoxWidth: 45,
             pinBoxHeight: 50,
             pinBoxRadius: 8,
           ),

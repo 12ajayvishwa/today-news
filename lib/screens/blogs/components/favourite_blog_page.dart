@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path/path.dart';
 import 'package:todaynews/widgets/custom_appbar.dart';
 
@@ -33,6 +36,9 @@ class _FavouriteBLogState extends State<FavouriteBLog> {
       title: Text('Favourite Blogs',style: TextStyle(color: Colors.black,fontFamily: "Lato"),),
       centerTitle: true,
     ),
-    body: Center(child: Text("You didn't added favourite blos")),);
+    body: Center(child:
+     
+        Text("You didn't added favourite blog",style: TextStyle(fontFamily: "Lato",fontSize: 25),)
+    ))   ;
   }
 }

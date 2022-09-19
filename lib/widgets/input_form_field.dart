@@ -65,6 +65,7 @@ class PhoneNumberInputField extends StatelessWidget {
   final Size size;
   final TextEditingController controller;
   final String hintText;
+  final FormFieldValidator validator;
   final TextInputType textInputType;
   final TextInputAction? textInputAction;
   const PhoneNumberInputField(
@@ -73,6 +74,7 @@ class PhoneNumberInputField extends StatelessWidget {
       required this.controller,
       required this.hintText,
       required this.textInputType,
+      required this.validator,
       this.textInputAction})
       : super(key: key);
 
@@ -95,6 +97,7 @@ class PhoneNumberInputField extends StatelessWidget {
             },
             textInputAction: textInputAction,
             autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: validator,
             decoration: inputDecoration(
               hintText,
             ),

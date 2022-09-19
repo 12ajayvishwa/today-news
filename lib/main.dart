@@ -2,13 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/get_navigation.dart';
-import 'package:todaynews/screens/signin_page.dart';
-import 'package:todaynews/screens/signup_page.dart';
-import 'package:todaynews/screens/user_profile_page.dart';
+import 'package:todaynews/screens/user_auth/signin_page.dart';
+import 'package:todaynews/screens/user_auth/signup_page.dart';
+import 'package:todaynews/screens/profile_page/user_profile_page.dart';
 import 'package:todaynews/services/firebase/auth_services.dart';
 import 'package:todaynews/services/linker.dart';
 
-import 'screens/home/home.dart';
+import 'screens/home/components/home.dart';
 
 
 
